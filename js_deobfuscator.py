@@ -497,16 +497,32 @@ class Deobfuscator:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="JavaScript deobfuscator for _0x-style string table obfuscation"
+        description="JavaScript deobfuscator for _0x-style string table obfuscation",
+        epilog="""
+Examples:
+  %(prog)s obfuscated.js
+  %(prog)s input.js --repeat --collapse-concat --out clean.js
+  %(prog)s input.js --preview --mapping
+
+This tool is designed for a specific obfuscation pattern only.
+See README.md for supported patterns and limitations.
+        """,
+        formatter_class=argparse.RawDescriptionHelpFormatter
     )
     
     parser.add_argument("input", help="Path to obfuscated JavaScript file")
-    parser.add_argument("--out", "-o", help="Output file path")
-    parser.add_argument("--repeat", action="store_true", help="Run multiple passes")
-    parser.add_argument("--max-iter", type=int, default=6, help="Max iterations")
-    parser.add_argument("--collapse-concat", action="store_true", help="Collapse string concatenations")
-    parser.add_argument("--mapping", action="store_true", help="Print mapping table")
-    parser.add_argument("--preview", action="store_true", help="Print preview only")
+    parser.add_argument("--out", "-o", metavar="FILE", 
+                       help="Output file path (default: INPUT.deobf.js)")
+    parser.add_argument("--repeat", action="store_true", 
+                       help="Run multiple passes until no more resolver calls remain")
+    parser.add_argument("--max-iter", type=int, default=6, metavar="N",
+                       help="Maximum iterations for repeat mode (default: 6)")
+    parser.add_argument("--collapse-concat", action="store_true", 
+                       help="Collapse adjacent string literal concatenations")
+    parser.add_argument("--mapping", action="store_true", 
+                       help="Print hex to string mapping table")
+    parser.add_argument("--preview", action="store_true", 
+                       help="Print preview of output without saving to file")
     
     args = parser.parse_args()
     
